@@ -9,8 +9,6 @@ s.open()
 def write(msg, port):
     port.write((msg + "\r\n").encode())
 
-
-
 def receive(port):
     value = port.read_until(terminator=b"\r\n")
     return value
@@ -28,9 +26,9 @@ write("radio set pwr 14", s)
 print(receive(s))
 
 while True:
-    number = input("number: ")
-
-    write("radio tx " + number, s)
+    letter = input("letter: ")
+    letter = ord(letter)
+    write("radio tx " + str(letter), s)
     print(receive(s))
     print(receive(s))
     

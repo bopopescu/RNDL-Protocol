@@ -30,8 +30,22 @@ while True:
     write("radio rx 0", s)
     receive(s) #ok
     
-    value = receive(s)
-    print(value)
+    value = receive(s).decode()
+    
+    value = value.replace("b", "")
+    value = value.replace("'", "")
+    value = value.replace("r", "")
+    value = value.replace("n", "")
+    value = value.replace("\\", "")
+    
+    value = value.split(" ");
+    if len(value) == 3:
+        value = chr(int(value[2]))
+    else:
+        value = "err"
+
+    if value != "err":
+        print(value)
     
 
 s.close()
