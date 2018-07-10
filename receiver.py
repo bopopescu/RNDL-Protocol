@@ -26,11 +26,14 @@ print(r)
 write("mac pause", s)
 receive(s)
 
+sentence = []
+
 while True:
     write("radio rx 0", s)
     receive(s) #ok
     
     value = receive(s).decode()
+    
     
     value = value.replace("b", "")
     value = value.replace("'", "")
@@ -40,12 +43,22 @@ while True:
     
     value = value.split(" ");
     if len(value) == 3:
+        valueint = int(value[2])
         value = chr(int(value[2]))
+        
     else:
         value = "err"
 
     if value != "err":
-        print(value)
+        if valueint == 0:
+            print("".join(sentence))
+            sentence = []
+        else:
+            sentence.append(value)
+        
+            
+
+    
     
 
 s.close()

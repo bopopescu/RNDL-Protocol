@@ -26,11 +26,18 @@ write("radio set pwr 14", s)
 print(receive(s))
 
 while True:
-    letter = input("letter: ")
-    letter = ord(letter)
-    write("radio tx " + str(letter), s)
+    sentence = input("sentence: ")
+    for i in range(len(sentence)):
+        char = sentence[i]
+        char = ord(char)
+
+        write("radio tx " + str(char), s)
+        print(receive(s))
+        print(receive(s))
+
+    write("radio tx 0", s)
     print(receive(s))
-    print(receive(s))
+    print(receive(s))    
     
 
 
