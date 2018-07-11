@@ -46,6 +46,7 @@ while True:
             pass
         
         value = encoder.decodehex(value[1])
+        print("Received packet (" + str(len(value)) + ")")
         
     else:
         value = None
