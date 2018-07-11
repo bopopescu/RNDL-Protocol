@@ -41,7 +41,10 @@ while True:
         value[1] = value[1].replace("\\r\\n", "")
         valueint = 1
         try:
-            valueint = int(value[1])
+            ts = value[1]
+            print(ts[-4:-2])
+            valueint = 0 if ts[-4:-2] == "00" else 1
+            pass
         except ValueError:
             pass
         
@@ -52,10 +55,12 @@ while True:
         value = None
 
     if value != None:
+        print (sentence)
+            sentence.append(value)
+
         if valueint == 0:
             print("".join(sentence))
             sentence = []
         else:
-            sentence.append(value)
         
 s.close()

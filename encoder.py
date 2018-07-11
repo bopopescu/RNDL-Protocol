@@ -26,8 +26,6 @@ def encodehex(msg):
         strings.append(temp)
     return strings
 
-encodehex("testt")
-
 def decodehex(msg):
     ba = []
     for i in range(math.ceil(len(msg)/2)-1):
