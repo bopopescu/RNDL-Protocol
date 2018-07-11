@@ -1,6 +1,6 @@
 import math
 
-MAX_HEX_CHARS = 100
+MAX_HEX_CHARS = 10
 
 def encodehex(msg):
     values = []
@@ -11,8 +11,6 @@ def encodehex(msg):
         
     else:
         values = [ msg ]
-
-    print(values)
 
     strings = []
     

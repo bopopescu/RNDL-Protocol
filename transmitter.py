@@ -1,7 +1,6 @@
 import serial
 import encoder
-from serialutil import write
-from serialutil import receive
+from serialutil import *
 
 s = serial.Serial()
 s.port = "COM3"
@@ -12,7 +11,7 @@ s.open()
 #test
 s.write(b"sys get ver\r\n")
 r = s.read_until(terminator=b"\n")
-print(r)
+print(clean_message(r))
 
 write("mac pause", s)
 receive(s)
@@ -27,7 +26,7 @@ while True:
     for single in encoded:
         write("radio tx " + single, s)
         print("sending " + single)
-        print(receive(s))
-        print(receive(s))
+        receive(s)
+        receive(s)
 
 s.close()

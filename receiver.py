@@ -1,8 +1,7 @@
 import serial
 import time
 import encoder
-from serialutil import write
-from serialutil import receive
+from serialutil import *
 
 s = serial.Serial()
 s.port = "COM7"
@@ -15,7 +14,7 @@ s.open()
 #test
 s.write(b"sys get ver\r\n")
 r = s.read_until(terminator=b"\n")
-print(r)
+print(clean_message(r))
 
 write("mac pause", s)
 receive(s)
@@ -34,6 +33,7 @@ while True:
     value = value.replace("n", "")
     value = value.replace("\\", "")
     value = value.replace("  ", " ")
+
     value = value.split(" ");
     
     if len(value) == 2:
@@ -42,7 +42,6 @@ while True:
         valueint = 1
         try:
             ts = value[1]
-            print(ts[-4:-2])
             valueint = 0 if ts[-4:-2] == "00" else 1
             pass
         except ValueError:
@@ -55,12 +54,10 @@ while True:
         value = None
 
     if value != None:
-        print (sentence)
-            sentence.append(value)
+        sentence.append(value)
 
         if valueint == 0:
             print("".join(sentence))
             sentence = []
-        else:
         
 s.close()
