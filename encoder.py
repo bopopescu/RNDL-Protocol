@@ -1,6 +1,6 @@
 import math
 
-MAX_HEX_CHARS = 200
+MAX_HEX_CHARS = 4
 
 def encodehex(msg):
     values = []
