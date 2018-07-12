@@ -4,7 +4,7 @@ import encoder
 from serialutil import *
 
 s = serial.Serial()
-s.port = "COM7"
+s.port = "COM9"
 s.baudrate = 57600
 s.parity = serial.PARITY_NONE
 s.timeout = None

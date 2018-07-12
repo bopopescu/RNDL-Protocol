@@ -3,7 +3,7 @@ import encoder
 from serialutil import *
 
 s = serial.Serial()
-s.port = "COM3"
+s.port = "COM8"
 s.baudrate = 57600
 s.parity = serial.PARITY_NONE
 s.open()
