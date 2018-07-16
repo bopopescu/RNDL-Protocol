@@ -1,6 +1,6 @@
 from RNDLDevice import *
 
-device = RNDLDevice("COM9")
+device = RNDLDevice("COM7")
 
 def cb(msg):
     return "reply"

@@ -1,6 +1,6 @@
 from RNDLDevice import *
 
-device = RNDLDevice("COM8")
+device = RNDLDevice("COM3")
 
 while True:
     msg = input("message: ")

@@ -4,8 +4,6 @@ import encoder
 from serialutil import *
 import transceiver as tr
 
-
-
 class RNDLDevice():
 
     def __init__(self, port):
@@ -27,20 +25,22 @@ class RNDLDevice():
         write("mac pause", self.s)
         serial_receive(self.s)
 
-        write("radio set pwr 14", self.s)
-        serial_receive(self.s)
+        #write("radio set pwr 14", self.s)
+        #serial_receive(self.s)
 
     #starts an unicast request to the given address and returns the result
     def request(self, msg, addr):
-        tr.transmit("REQ.test.FROM.12")
+        print("tr transmit static")
+        tr.transmit(self.s, "REQ.test.FROM.12")
+        #tr.transmit(self.s, "REQ." + msg + ".FROM." + addr)
 
-        reply = tr.receive()
+        reply = tr.receive(self.s)
         return reply
 
     #starts slave mode. addr is the address of the device. request_callback should return an answer based on the request parameter
     def start_slave(self, addr, request_callback):
         while True:
-            req = tr.receive()
+            req = tr.receive(self.s)
             print(req)
 
             req = req.split(".")
@@ -56,7 +56,7 @@ class RNDLDevice():
             if a == addr:
                 response = request_callback(r)
                 print(response)
-                tr.transmit(response)
+                tr.transmit(self.s, response)
         
 
    
