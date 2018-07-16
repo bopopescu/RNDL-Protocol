@@ -1,26 +1,22 @@
+import sys
 import serial
-import time
 import encoder
 from serialutil import *
 
-class Receiver():
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
-    def __init__(self, callback):
+
+class RNDLDevice():
+
+    def __init__(self, port):
         self.sentence = []
-
         self.s = serial.Serial()
-        self.s.port = "COM9"
+        self.s.port = port
         self.s.baudrate = 57600
         self.s.parity = serial.PARITY_NONE
-        self.s.timeout = None
         self.s.open()
-
-        self.callback = callback
-
-        self.init_lora()
-        self.receive_loop()
-
-        
 
     def __del__(self):
         self.s.close()
@@ -29,12 +25,44 @@ class Receiver():
         self.s.write(b"sys get ver\r\n")
         r = self.s.read_until(terminator=b"\n")
         print(clean_message(r))
-
+        
         write("mac pause", self.s)
         serial_receive(self.s)
 
+        write("radio set pwr 14", self.s)
+        serial_receive(self.s)
 
-    def receive_loop(self):
+    #starts an unicast request to the given address and returns the result
+    def request(self, msg, addr):
+        transmit("REQ." + msg + ".FROM." + addr)
+        reply = serial_receive()
+
+    #starts slave mode. addr is the address of the device. request_callback should return an answer based on the request parameter
+    def start_slave(self, addr, request_callback):
+        while True:
+            req = self.receive()
+            req = req.split(".")
+            req[-1] = req[-1][:-1]
+            r = req[1]
+            a = req[3]
+
+            if int(a) == addr:
+                response = request_callback(r)
+                self.transmit(response)
+        
+
+    #transmit single message over LoRa
+    def transmit(self, msg):
+        encoded = encoder.encodehex(msg)
+        encoded[-1] += "00"
+        for single in encoded:
+            write("radio tx " + single, self.s)
+            print("sending " + single)
+            serial_receive(self.s)
+            serial_receive(self.s)
+
+    #returns single message received over LoRa
+    def receive(self):
         while True:
             write("radio rx 0", self.s)
             serial_receive(self.s) #ok
@@ -72,11 +100,17 @@ class Receiver():
 
                 if valueint == 0:
                     received = "".join(self.sentence)
-                    self.callback(received)
+                    return received
                     self.sentence = []
 
-def cb(msg):
-    print(msg)
+
+def cb(r):
+    return "answer"
 
 
-rec = Receiver(cb)
+device = RNDLDevice()
+device.start_slave(12, cb)
+
+input("tt")
+
+
