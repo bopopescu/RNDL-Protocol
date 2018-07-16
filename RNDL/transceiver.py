@@ -28,6 +28,12 @@ class Transceiver:
         ser.write("mac pause", self.s)
         ser.read(self.s)
 
+    def start_slave(self, addr, callback):
+        pass
+
+    def request_data(self, addr, msg):
+        pass
+
     #transmits msg over lora
     def transmit(self, msg):
         encoded = encoder.encodehex(msg)
@@ -77,5 +83,5 @@ class Transceiver:
 
                 if valueint == 0:
                     received = "".join(self.sentence)
-                    return received
                     self.sentence = []
+                    return received
