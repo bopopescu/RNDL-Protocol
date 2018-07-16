@@ -15,18 +15,11 @@ class Window(QMainWindow):
 
         self.show()
 
-    def init_gui(self):
+    def init_gui(self):        
         btn = QPushButton("Send", self)
         btn.clicked.connect(self.onClick)
         btn.resize(60, 60)
         btn.move(920, 320)
-
-        self.tf = QLineEdit(self)
-        self.tf.move(20, 320)
-        self.tf.resize(880, 60)
-        font = self.tf.font()
-        font.setPointSize(30)
-        self.tf.setFont(font)
 
         self.chatlog = QTextEdit(self)
         self.chatlog.resize(960, 280)
@@ -36,20 +29,28 @@ class Window(QMainWindow):
         palette.setColor(QPalette.Text, Qt.darkGray)
         self.chatlog.setPalette(palette)
 
+        self.tf_address = QLineEdit(self)
+        self.tf_address.resize(60, 60)
+        self.tf_address.move(20, 320)
+        font = self.tf_address.font()
+        font.setPointSize(35)
+        self.tf_address.setFont(font)
 
-        self.chatlog.setText("test\nasdf")        
+        self.tf = QLineEdit(self)
+        self.tf.move(100, 320)
+        self.tf.resize(800, 60)
+        font = self.tf.font()
+        font.setPointSize(30)
+        self.tf.setFont(font)
+
         
+
 
     @pyqtSlot()
     def onClick(self):
         print('PyQt5 button click')
         print(self.tf.text())
 
-
-app = QApplication(sys.argv)    
-window = Window()
-
-sys.exit(app.exec_())
 
         
         
