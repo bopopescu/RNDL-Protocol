@@ -32,13 +32,19 @@ class Transceiver:
         while True:
             data = self.receive()
             print("received request: " + data)
-            self.transmit(callback(data)) #TODO: implement FILL message
+
+            data = data.split(".")
+            if data[0] == "REQ":
+                print(str(data[2][:-1] == addr))
+                if data[2][:-1] == addr:
+                    self.transmit("RESP." + callback(data))
         
 
     def request_data(self, addr, msg):
         self.transmit("REQ." + str(msg) + ".FROM." + str(addr))
         reply = self.receive()
         print(reply)
+        #TODO: implement timeout
 
     #transmits msg over lora
     def transmit(self, msg):

@@ -1,2 +1,9 @@
-    REQ.<data>.FROM.<addr>
+Request:
+    REQ.<message>.FROM.<addr>
 
+Response:
+    RESP.<data>
+
+TODO: 
+    fix 'busy' issue by adding extra serial read
+    arduino
