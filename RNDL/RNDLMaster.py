@@ -6,4 +6,4 @@ trans = Transceiver("COM3")
 
 while True:
     msg = input("peta: ")
-    trans.transmit(msg)
+    trans.request_data("12", msg)

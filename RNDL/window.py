@@ -51,10 +51,6 @@ class Window(QMainWindow):
         print('PyQt5 button click')
         print(self.tf.text())
 
-app = QApplication(sys.argv)    
-window = Window()
-
-sys.exit(app.exec_())
 
 
 

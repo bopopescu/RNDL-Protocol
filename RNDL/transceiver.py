@@ -29,10 +29,16 @@ class Transceiver:
         ser.read(self.s)
 
     def start_slave(self, addr, callback):
-        pass
+        while True:
+            data = self.receive()
+            print("received request: " + data)
+            self.transmit(callback(data)) #TODO: implement FILL message
+        
 
     def request_data(self, addr, msg):
-        pass
+        self.transmit("REQ." + str(msg) + ".FROM." + str(addr))
+        reply = self.receive()
+        print(reply)
 
     #transmits msg over lora
     def transmit(self, msg):

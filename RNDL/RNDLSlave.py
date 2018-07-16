@@ -2,7 +2,12 @@ from transceiver import Transceiver
 import serialutil as ser
 import encoder
 
+
+
+def callback(msg):
+    return input("reply: ")
+
+
 trans = Transceiver("COM7")
 
-while True:
-    print(trans.receive())
+trans.start_slave("12", callback)
