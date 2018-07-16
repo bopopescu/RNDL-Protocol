@@ -31,15 +31,15 @@ class Receiver():
         print(clean_message(r))
 
         write("mac pause", self.s)
-        receive(self.s)
+        serial_receive(self.s)
 
 
     def receive_loop(self):
         while True:
             write("radio rx 0", self.s)
-            receive(self.s) #ok
+            serial_receive(self.s) #ok
 
-            value = receive(self.s).decode()
+            value = serial_receive(self.s).decode()
 
             value = value.replace("b", "")
             value = value.replace("'", "")

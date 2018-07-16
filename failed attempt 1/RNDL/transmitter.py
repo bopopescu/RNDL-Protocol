@@ -22,10 +22,10 @@ class Transmitter():
         print(clean_message(r))
         
         write("mac pause", self.s)
-        receive(self.s)
+        serial_receive(self.s)
 
         write("radio set pwr 14", self.s)
-        receive(self.s)
+        serial_receive(self.s)
 
     def transmit(self, msg):
         encoded = encoder.encodehex(msg)
@@ -33,9 +33,9 @@ class Transmitter():
         for single in encoded:
             write("radio tx " + single, self.s)
             print("sending " + single)
-            receive(self.s)
-            receive(self.s)
+            serial_receive(self.s)
+            serial_receive(self.s)
 
 
 t = Transmitter()
-t.transmit("findenig")
+t.transmit("REQ.test.FROM.12")

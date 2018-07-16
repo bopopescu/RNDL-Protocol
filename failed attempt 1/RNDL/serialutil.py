@@ -2,7 +2,7 @@
 def write(msg, port):
     port.write((msg + "\r\n").encode())
 
-def receive(port):
+def serial_receive(port):
     value = port.read_until(terminator=b"\r\n")
     return value
 
