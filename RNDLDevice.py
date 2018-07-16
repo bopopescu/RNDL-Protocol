@@ -34,20 +34,30 @@ class RNDLDevice():
 
     #starts an unicast request to the given address and returns the result
     def request(self, msg, addr):
-        transmit("REQ." + msg + ".FROM." + addr)
-        reply = serial_receive()
+        self.transmit("REQ.test.FROM.12")
+
+        reply = self.receive()
+        return reply
 
     #starts slave mode. addr is the address of the device. request_callback should return an answer based on the request parameter
     def start_slave(self, addr, request_callback):
         while True:
             req = self.receive()
+            print(req)
+
             req = req.split(".")
+
+            print("===================")
+            
             req[-1] = req[-1][:-1]
+
+            print(req)
             r = req[1]
             a = req[3]
 
-            if int(a) == addr:
+            if a == addr:
                 response = request_callback(r)
+                print(response)
                 self.transmit(response)
         
 
@@ -102,15 +112,3 @@ class RNDLDevice():
                     received = "".join(self.sentence)
                     return received
                     self.sentence = []
-
-
-def cb(r):
-    return "answer"
-
-
-device = RNDLDevice()
-device.start_slave(12, cb)
-
-input("tt")
-
-
