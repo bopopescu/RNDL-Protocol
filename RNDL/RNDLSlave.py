@@ -8,6 +8,6 @@ def callback(msg):
     return input("reply: ")
 
 
-trans = Transceiver("COM7")
+trans = Transceiver("COM8")
 
 trans.start_slave("12", callback)

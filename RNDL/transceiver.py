@@ -2,6 +2,8 @@ import encoder
 import sys
 import serial
 import serialutil as ser
+from threading import *
+import time
 
 class Transceiver:
 
@@ -33,17 +35,21 @@ class Transceiver:
             data = self.receive()
             print("received request: " + data)
 
-            data = data.split(".")
-            if data[0] == "REQ":
-                print(str(data[2][:-1] == addr))
-                if data[2][:-1] == addr:
-                    self.transmit("RESP." + callback(data))
+            data = data.split(";")
+            if data[0] == "Q":
+                print(data[1])
+                print(addr)
+                print(str(data[1] == addr))
+                if data[1] == addr:
+                    self.transmit("A;" + callback(data[2]))
         
 
     def request_data(self, addr, msg):
-        self.transmit("REQ." + str(msg) + ".FROM." + str(addr))
+        self.transmit("Q;" + str(addr) + ";" + str(msg))
+
         reply = self.receive()
-        print(reply)
+        reply = reply.split(";")
+        print(reply[1])
         #TODO: implement timeout
 
     #transmits msg over lora

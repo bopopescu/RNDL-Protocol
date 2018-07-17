@@ -2,7 +2,7 @@ from transceiver import Transceiver
 import serialutil as ser
 import encoder
 
-trans = Transceiver("COM3")
+trans = Transceiver("COM10")
 
 while True:
     msg = input("peta: ")

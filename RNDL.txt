@@ -1,8 +1,8 @@
 Request:
-    REQ.<message>.FROM.<addr>
+    Q;<addr>;<message>
 
 Response:
-    RESP.<data>
+    A;<data>
 
 TODO: 
     fix 'busy' issue by adding extra serial read
