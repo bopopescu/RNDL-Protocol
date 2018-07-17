@@ -21,13 +21,16 @@ class Window(QMainWindow):
         btn.resize(60, 60)
         btn.move(920, 320)
 
-        self.chatlog = QTextEdit(self)
-        self.chatlog.resize(960, 280)
-        self.chatlog.move(20, 20)
-        self.chatlog.setReadOnly(True)
+        self.tf_chatlog = QTextEdit(self)
+        self.tf_chatlog.resize(960, 280)
+        self.tf_chatlog.move(20, 20)
+        self.tf_chatlog.setReadOnly(True)
         palette = QPalette()
         palette.setColor(QPalette.Text, Qt.darkGray)
-        self.chatlog.setPalette(palette)
+        self.tf_chatlog.setPalette(palette)
+        font = self.tf_chatlog.font()
+        font.setPointSize(15)
+        self.tf_chatlog.setFont(font)
 
         self.tf_address = QLineEdit(self)
         self.tf_address.resize(60, 60)
@@ -43,9 +46,6 @@ class Window(QMainWindow):
         font.setPointSize(30)
         self.tf.setFont(font)
 
-        
-
-
     @pyqtSlot()
     def onClick(self):
         print('PyQt5 button click')
@@ -53,6 +53,8 @@ class Window(QMainWindow):
 
 
 
+if __name__ == "__main__":
+    app = QApplication(sys.argv)    
+    window = Window()
 
-        
-        
+    sys.exit(app.exec_())

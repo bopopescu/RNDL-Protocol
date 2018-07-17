@@ -49,7 +49,7 @@ class Transceiver:
 
         reply = self.receive()
         reply = reply.split(";")
-        print(reply[1])
+        return reply[1]
         #TODO: implement timeout
 
     #transmits msg over lora

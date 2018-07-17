@@ -10,4 +10,4 @@ def callback(msg):
 
 trans = Transceiver("COM8")
 
-trans.start_slave("12", callback)
+trans.start_slave("2", callback)
