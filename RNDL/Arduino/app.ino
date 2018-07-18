@@ -14,6 +14,7 @@ PS2Keyboard keyboard;
 //LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
+
 void encodehex(String msg)
 {
     int msglen = msg.length();
@@ -35,7 +36,53 @@ void encodehex(String msg)
             encoded[i] += String(splitmsg[i][j], HEX);
         }
     }
-    return encoded;
+}
+
+void decodehex(String msg)
+{
+    const int MAXBYTES = 6;
+    int msglen = msg.length();
+
+    int it = 1 + ((msglen - 1) / MAXBYTES);
+    
+    String splitmsg[it];
+
+    char decoded[msglen/2];
+    unsigned int deccount = 0;
+
+    for(int i = 0; i < it; i++)
+    {
+        splitmsg[i] = msg.substring(i*MAXBYTES, i*MAXBYTES + MAXBYTES);
+    }
+
+
+
+    for(String s : splitmsg)
+    {
+            unsigned long number = strtoul(&s[0], NULL, 16);
+            char c1 = number & 0xFF;
+            number >>= 8;
+            char c2 = number & 0xFF;
+            number >>= 8;
+            char c3 = number & 0xFF;
+            number >>= 8;
+
+            decoded[deccount] = c3;
+            deccount++;
+            decoded[deccount] = c2;
+            deccount++;
+            decoded[deccount] = c1;
+            deccount++;
+    }
+
+    String decodedstring(decoded);
+
+    Serial.println(decodedstring.substring(0, msglen/2));
+
+
+
+
+
 }
 
 String keyboardstring = "";
@@ -44,13 +91,15 @@ void setup()
 {
 
 
+
     //pinMode(7, OUTPUT);
     //digitalWrite(7, HIGH);
     keyboard.begin(2, 3, PS2Keymap_US);
 
     Serial.begin(115200);
     Serial.println("International Keyboard Test:");
-    encodehex("testtestt");
+    //encodehex("testtestt");
+    decodehex("676173676173696923235544");
 
 /*
     lcd.begin(16, 2);

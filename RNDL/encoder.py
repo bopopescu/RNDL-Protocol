@@ -2,6 +2,12 @@ import math
 
 MAX_HEX_CHARS = 4
 
+union character
+{
+    char c[2];
+    
+}
+
 def encodehex(msg):
     values = []
     if len(msg) > MAX_HEX_CHARS:

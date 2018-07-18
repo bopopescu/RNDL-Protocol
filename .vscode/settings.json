@@ -3,6 +3,7 @@
     "files.associations": {
         "iosfwd": "cpp",
         "xlocale": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "cstddef": "cpp"
     }
 }
