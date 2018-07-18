@@ -14,8 +14,27 @@ PS2Keyboard keyboard;
 //LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
+String read_serial()
+{
+    return Serial.readStringUntil("\n");
+}
 
-void encodehex(String msg)
+void write_serial(String msg)
+{
+    Serial.print(msg + "\r\n");
+}
+
+void setup_serial()
+{
+    write_serial("sys get ver");
+    read_serial();
+    
+    write_serial("mac pause");
+    read_serial();
+}
+
+
+void send_lora(String msg)
 {
     int msglen = msg.length();
 
@@ -36,54 +55,80 @@ void encodehex(String msg)
             encoded[i] += String(splitmsg[i][j], HEX);
         }
     }
+    encoded[it-1] += "00";
+
+    for(String s : encoded)
+    {
+        write_serial("radio tx " + s);
+        read_serial();
+        read_serial();
+    }
 }
 
-void decodehex(String msg)
+String single_read_lora()
 {
-    const int MAXBYTES = 6;
-    int msglen = msg.length();
 
-    int it = 1 + ((msglen - 1) / MAXBYTES);
-    
-    String splitmsg[it];
+    bool end_of_message = false;
 
-    char decoded[msglen/2];
-    unsigned int deccount = 0;
+    String whole_message = "";
 
-    for(int i = 0; i < it; i++)
+    while(!end_of_message)
     {
-        splitmsg[i] = msg.substring(i*MAXBYTES, i*MAXBYTES + MAXBYTES);
+        write_serial("radio rx 0");
+        read_serial(); //ok
+
+        String msg = read_serial();
+
+        if(msg.substsring(msg.length()-3) == "00")
+        {
+            end_of_message = true;
+        }
+
+        const int MAXBYTES = 6;
+        int msglen = msg.length();
+
+        int it = 1 + ((msglen - 1) / MAXBYTES);
+        
+        String splitmsg[it];
+
+        char decoded[msglen/2];
+        unsigned int deccount = 0;
+
+        for(int i = 0; i < it; i++)
+        {
+            splitmsg[i] = msg.substring(i*MAXBYTES, i*MAXBYTES + MAXBYTES);
+        }
+
+
+
+        for(String s : splitmsg)
+        {
+                unsigned long number = strtoul(&s[0], NULL, 16);
+                char c1 = number & 0xFF;
+                number >>= 8;
+                char c2 = number & 0xFF;
+                number >>= 8;
+                char c3 = number & 0xFF;
+                number >>= 8;
+
+                decoded[deccount] = c3;
+                deccount++;
+                decoded[deccount] = c2;
+                deccount++;
+                decoded[deccount] = c1;
+                deccount++;
+        }
+
+        String decodedstring(decoded);
+
+        whole_message += decodedstring.substring(0, msglen/2);
     }
 
-
-
-    for(String s : splitmsg)
-    {
-            unsigned long number = strtoul(&s[0], NULL, 16);
-            char c1 = number & 0xFF;
-            number >>= 8;
-            char c2 = number & 0xFF;
-            number >>= 8;
-            char c3 = number & 0xFF;
-            number >>= 8;
-
-            decoded[deccount] = c3;
-            deccount++;
-            decoded[deccount] = c2;
-            deccount++;
-            decoded[deccount] = c1;
-            deccount++;
-    }
-
-    String decodedstring(decoded);
-
-    Serial.println(decodedstring.substring(0, msglen/2));
-
-
-
-
+    return whole_message;
 
 }
+
+
 
 String keyboardstring = "";
 
