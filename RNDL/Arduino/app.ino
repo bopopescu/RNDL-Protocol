@@ -1,14 +1,25 @@
 
 #include <LiquidCrystal.h>
-
 #include <PS2Keyboard.h>
+#include <SoftwareSerial.h>
+
+
+#ifdef DEBUG
+    #define PRINT(x) Serial.println(x)
+#else
+    #define PRINT(x) 
+#endif
+
+
+SoftwareSerial lora(5, 4); // RX, TX    
 
 const int DataPin = 9;
 const int IRQpin =  8;
 const int MAX_HEX_CHARS = 4;
 
-PS2Keyboard keyboard;
+//PS2Keyboard keyboard;
 
+String keyboardbuffer = "";
 
 //const int rs = 13, en = 12, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
 //LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -16,15 +27,20 @@ PS2Keyboard keyboard;
 
 String read_serial()
 {
-    return Serial.readStringUntil("\n");
+    while(lora.available() == 0)
+    {
+        ESP.wdtFeed();
+    }
+
+    return lora.readStringUntil('\n');
 }
 
 void write_serial(String msg)
 {
-    Serial.print(msg + "\r\n");
+    lora.print(msg + "\r\n");
 }
 
-void setup_serial()
+void setup_lora()
 {
     write_serial("sys get ver");
     read_serial();
@@ -72,18 +88,20 @@ String single_read_lora()
 
     String whole_message = "";
 
+    int gas = 0;
+
     while(!end_of_message)
     {
+        PRINT(gas);
+        gas++;
+        
         write_serial("radio rx 0");
         read_serial(); //ok
-
         String msg = read_serial();
 
-        if(msg.substsring(msg.length()-3) == "00")
-        {
-            end_of_message = true;
-        }
-
+        PRINT(msg);
+        
+        
         const int MAXBYTES = 6;
         int msglen = msg.length();
 
@@ -94,15 +112,31 @@ String single_read_lora()
         char decoded[msglen/2];
         unsigned int deccount = 0;
 
-        for(int i = 0; i < it; i++)
+        int lastspace = msg.lastIndexOf(' ');
+        String tmp = msg.substring(lastspace+1);
+        if(tmp.charAt(0) == 'r')
         {
-            splitmsg[i] = msg.substring(i*MAXBYTES, i*MAXBYTES + MAXBYTES);
+            continue;
         }
 
+        PRINT("ISDN");
+        PRINT(tmp);
+        tmp.trim();
+        if(tmp.endsWith("00"))
+        {
+            end_of_message = true;
+        }
 
+        for(int i = 0; i < it; i++)
+        {
+            splitmsg[i] = tmp.substring(i*MAXBYTES, i*MAXBYTES + MAXBYTES);
+        }
+
+        PRINT("==============");
 
         for(String s : splitmsg)
         {
+                PRINT(s);
                 unsigned long number = strtoul(&s[0], NULL, 16);
                 char c1 = number & 0xFF;
                 number >>= 8;
@@ -122,48 +156,36 @@ String single_read_lora()
         String decodedstring(decoded);
 
         whole_message += decodedstring.substring(0, msglen/2);
+        PRINT("LEX: " + whole_message);
     }
 
     return whole_message;
 
 }
 
+void start_rndl_slave(String address)
+{
 
-
-String keyboardstring = "";
+}
 
 void setup()
 {
-
-
-
     //pinMode(7, OUTPUT);
     //digitalWrite(7, HIGH);
-    keyboard.begin(2, 3, PS2Keymap_US);
+    //keyboard.begin(2, 3, PS2Keymap_US);
 
-    Serial.begin(115200);
-    Serial.println("International Keyboard Test:");
-    //encodehex("testtestt");
-    decodehex("676173676173696923235544");
+    Serial.begin(57600);
+    Serial.println("Arduino LoRa");
 
-/*
-    lcd.begin(16, 2);
-    
-    lcd.setCursor(0, 1);
-    lcd.print("test test test");
-    lcd.setCursor(0, 0);
+    lora.begin(57600);
 
-    lcd.display();
-    lcd.autoscroll();
-    */
+    setup_lora();
+
+    send_lora("digits hex numbers with any prefix");
+
 }
 
 void loop() {
-    if (keyboard.available()) 
-    {
-        char c = keyboard.read();
-        Serial.println(c);
-    }
-  
-  
+
+    
 }

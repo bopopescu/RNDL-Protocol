@@ -3,6 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Felix\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\cores\\esp8266",
                 "C:\\Users\\Felix\\Documents\\Arduino\\libraries\\FreeRTOS\\src",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\LiquidCrystal\\src",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
@@ -10,6 +11,7 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": false,
                 "path": [
+                    "C:\\Users\\Felix\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\cores\\esp8266",
                     "C:\\Users\\Felix\\Documents\\Arduino\\libraries\\FreeRTOS\\src",
                     "C:\\Program Files (x86)\\Arduino\\libraries\\LiquidCrystal\\src",
                     "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
