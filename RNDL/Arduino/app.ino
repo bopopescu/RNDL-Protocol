@@ -174,13 +174,18 @@ void start_rndl_slave(String address)
             String t1 = msg.substring(2);
             int index1 = t1.indexOf(';');
             String t_addr = t1.substring(0, index1);
-            Serial.println(t_addr);
+            
+            int index2 = t1.indexOf(';', index1+1);
+            String req_msg = t1.substring(index2);
+
+            Serial.println("MESSAGE:");
+            Serial.println(req_msg);
 
             if(address.equalsIgnoreCase(t_addr))
             {
                 //TODO: check message
-
-                send_lora("Voltage: " + String(ESP.getVcc()));
+                int in = digitalRead(12);
+                send_lora("A;Voltage: " + String(in));
             }
 
         }
@@ -194,6 +199,9 @@ void setup()
     //pinMode(7, OUTPUT);
     //digitalWrite(7, HIGH);
     //keyboard.begin(2, 3, PS2Keymap_US);
+
+    pinMode(14, INPUT);
+
 
     Serial.begin(57600);
     Serial.println("Arduino LoRa");

@@ -48,6 +48,7 @@ class Transceiver:
         self.transmit("Q;" + str(addr) + ";" + str(msg))
 
         reply = self.receive()
+        print(reply)
         reply = reply.split(";")
         return reply[1]
         #TODO: implement timeout
