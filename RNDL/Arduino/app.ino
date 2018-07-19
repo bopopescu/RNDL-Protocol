@@ -165,7 +165,28 @@ String single_read_lora()
 
 void start_rndl_slave(String address)
 {
+    while(true)
+    {
+        String msg = single_read_lora();
+        PRINT("Received request: " + msg);
+        if(msg.startsWith("Q;"))
+        {
+            String t1 = msg.substring(2);
+            int index1 = t1.indexOf(';');
+            String t_addr = t1.substring(0, index1);
+            Serial.println(t_addr);
 
+            if(address.equalsIgnoreCase(t_addr))
+            {
+                //TODO: check message
+
+                send_lora("Voltage: " + String(ESP.getVcc()));
+            }
+
+        }
+
+        
+    }
 }
 
 void setup()
@@ -181,7 +202,9 @@ void setup()
 
     setup_lora();
 
-    send_lora("digits hex numbers with any prefix");
+    start_rndl_slave("1");
+
+    //send_lora("digits hex numbers with any prefix");
 
 }
 
