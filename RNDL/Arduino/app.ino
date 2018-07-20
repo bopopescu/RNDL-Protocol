@@ -3,6 +3,7 @@
 #include <PS2Keyboard.h>
 #include <SoftwareSerial.h>
 
+#define DEBUG
 
 #ifdef DEBUG
     #define PRINT(x) Serial.println(x)
@@ -102,7 +103,7 @@ String single_read_lora()
         PRINT(msg);
         
         
-        const int MAXBYTES = 6;
+        const int MAXBYTES = 4;
         int msglen = msg.length();
 
         int it = 1 + ((msglen - 1) / MAXBYTES);
@@ -142,11 +143,11 @@ String single_read_lora()
                 number >>= 8;
                 char c2 = number & 0xFF;
                 number >>= 8;
-                char c3 = number & 0xFF;
-                number >>= 8;
+                //char c3 = number & 0xFF;
+                //number >>= 8;
 
-                decoded[deccount] = c3;
-                deccount++;
+                //decoded[deccount] = c3;
+                //deccount++;
                 decoded[deccount] = c2;
                 deccount++;
                 decoded[deccount] = c1;
@@ -155,7 +156,7 @@ String single_read_lora()
 
         String decodedstring(decoded);
 
-        whole_message += decodedstring.substring(0, msglen/2);
+        whole_message += decodedstring.substring(0, msglen/2+1);
         PRINT("LEX: " + whole_message);
     }
 
@@ -176,16 +177,16 @@ void start_rndl_slave(String address)
             String t_addr = t1.substring(0, index1);
             
             int index2 = t1.indexOf(';', index1+1);
+            Serial.println("Index2: " + index2);
             String req_msg = t1.substring(index2);
 
             Serial.println("MESSAGE:");
-            Serial.println(req_msg);
 
             if(address.equalsIgnoreCase(t_addr))
             {
                 //TODO: check message
                 int in = digitalRead(12);
-                send_lora("A;Voltage: " + String(in));
+                send_lora("A;D0: " + in);
             }
 
         }
