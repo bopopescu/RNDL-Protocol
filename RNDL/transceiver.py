@@ -74,8 +74,8 @@ class Transceiver:
         for single in encoded:
             print("sending " + single)
             ser.write("radio tx " + single, self.s)
-            print(ser.read(self.s))
-            print(ser.read(self.s))
+            ser.read(self.s)
+            ser.read(self.s)
 
     # receive simple string using lora
     def receive(self):
