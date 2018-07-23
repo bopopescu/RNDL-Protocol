@@ -3,7 +3,3 @@ Request:
 
 Response:
     A;<data>
-
-TODO: 
-    fix 'busy' issue by adding extra serial read
-    arduino
