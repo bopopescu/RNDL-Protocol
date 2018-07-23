@@ -4,6 +4,7 @@
         "iosfwd": "cpp",
         "xlocale": "cpp",
         "xstring": "cpp",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "istream": "cpp"
     }
 }

@@ -15,6 +15,9 @@
 
 // connection used to communicate with the lora board (RN2383)
 SoftwareSerial lora(5, 4); // RX, TX    
+SoftwareSerial uno(13, 15); // RX, TX
+
+
 
 // maximum characters transmitted in a single packet
 const int MAX_HEX_CHARS = 10;
@@ -185,10 +188,35 @@ void start_rndl_slave(String address)
             // Compare addresses and send requested data
             if(address.equalsIgnoreCase(t_addr))
             {
+                // read until buffer is empty
+                while(uno.available())
+                {
+                    uno.read();
+                    ESP.wdtFeed();
+                }
 
                 if(req_msg == "time")
                 {
                     send_lora("A;time: " + String(millis()));
+                }
+                else if(req_msg == "keyboard")
+                {
+                    digitalWrite(LED_BUILTIN, LOW);
+                    String keyboardinput = " ";
+                    bool init = false;
+                    while(true)
+                    {
+                        while(!uno.available())
+                        {
+                            ESP.wdtFeed();
+                        }
+                        char key = uno.read();
+                        if(key == '\n') break;
+                        keyboardinput += key;
+                        ESP.wdtFeed();
+                    }
+                    digitalWrite(LED_BUILTIN, HIGH);
+                    send_lora("A;" + keyboardinput.substring(1));
                 }
                 else
                 {
@@ -207,10 +235,21 @@ void setup()
     Serial.begin(115200);
     Serial.println("Arduino LoRa");
 
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(1000);
+    digitalWrite(LED_BUILTIN, HIGH);
+
     // serial communication with the lora board (RN2383)
     lora.begin(57600);
+    uno.begin(9600);
 
-
+    while(uno.available())
+    {
+        uno.read();
+        ESP.wdtFeed();
+    }
+    
     // setup lora and start slave mode with given address
     setup_lora();
     start_rndl_slave("1");
