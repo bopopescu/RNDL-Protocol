@@ -1,11 +1,14 @@
 import math
 
-MAX_HEX_CHARS = 4
+# maximum number of characters per packet
+MAX_HEX_CHARS = 10
 
+# encode a string to the hexadecimal string used by the protocol
+#   msg:    string to encode
+#   return: string array of hexadecimal strings. each string has a max length of MAX_HEX_CHARS
 def encodehex(msg):
     values = []
     if len(msg) > MAX_HEX_CHARS:
-        #values = [msg[i:i+MAX_HEX_CHARS] for i in range(0, len(msg), MAX_HEX_CHARS)]
         for i in range(0, len(msg), MAX_HEX_CHARS):
             values.append(msg[i:i+MAX_HEX_CHARS])
         
@@ -24,6 +27,9 @@ def encodehex(msg):
         strings.append(temp)
     return strings
 
+# decode a hexadecimal string to a string
+#   msg:    single hexadecimal string to decode
+#   return: decoded string
 def decodehex(msg):
     ba = []
     for i in range(math.ceil(len(msg)/2)-1):

@@ -1,10 +1,12 @@
-
+// Arduino sketch which implements the RNDL protocol and simple lora messaging
+// created by Felix Holz, 2018-07-18
 #include <LiquidCrystal.h>
 #include <PS2Keyboard.h>
 #include <SoftwareSerial.h>
 
-#define DEBUG
+//#define DEBUG
 
+// print data to serial port for debugging
 #ifdef DEBUG
     #define PRINT(x) Serial.println(x)
 #else
@@ -15,7 +17,7 @@
 SoftwareSerial lora(5, 4); // RX, TX    
 
 // maximum characters transmitted in a single packet
-const int MAX_HEX_CHARS = 4;
+const int MAX_HEX_CHARS = 10;
 
 //PS2Keyboard keyboard;
 //String keyboardbuffer = "";
@@ -148,7 +150,7 @@ String single_read_lora()
         String decodedstring(decoded);
 
         whole_message += decodedstring.substring(0, msglen/2+1);
-        PRINT("LEX: " + whole_message);
+        PRINT("whole_message: " + whole_message);
     }
 
     return whole_message;
@@ -175,10 +177,9 @@ void start_rndl_slave(String address)
             String t_addr = t1.substring(0, index1);
             
             int index2 = t1.indexOf(';', index1);
-            Serial.println("Index2: " + index2);
             String req_msg = t1.substring(index2+1);
 
-            Serial.println("MESSAGE:");
+            PRINT("REQ_MSG:");
             PRINT(req_msg);
             
             // Compare addresses and send requested data

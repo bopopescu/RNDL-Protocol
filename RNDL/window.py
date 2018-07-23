@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+# defines a PyQt5 Window used for the RNDL Master GUI
 class Window(QMainWindow):
 
     def __init__(self):
@@ -48,7 +49,6 @@ class Window(QMainWindow):
 
     @pyqtSlot()
     def onClick(self):
-        print('PyQt5 button click')
         print(self.tf.text())
 
 
