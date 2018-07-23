@@ -1,3 +1,6 @@
+# utility functions for using the serial port
+# created by Felix Holz, 2018-07-11
+
 # write data to a serial port using the termination characters of the lora board (RN2383)
 def write(msg, port):
     port.write((msg + "\r\n").encode())

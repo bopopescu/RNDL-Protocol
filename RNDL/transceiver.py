@@ -1,3 +1,6 @@
+# Transceiver class for using the RNDL protocol and normal lora messages
+# created by Felix Holz, 2018-07-16
+
 import encoder
 import sys
 import serial

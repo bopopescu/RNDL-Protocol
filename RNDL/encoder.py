@@ -1,3 +1,6 @@
+# utility functions for encoding and decoding messages
+# created by Felix Holz, 2018-07-11
+
 import math
 
 # maximum number of characters per packet
