@@ -11,21 +11,20 @@
     #define PRINT(x) 
 #endif
 
-
+// connection used to communicate with the lora board (RN2383)
 SoftwareSerial lora(5, 4); // RX, TX    
 
-const int DataPin = 9;
-const int IRQpin =  8;
+// maximum characters transmitted in a single packet
 const int MAX_HEX_CHARS = 4;
 
 //PS2Keyboard keyboard;
-
-String keyboardbuffer = "";
+//String keyboardbuffer = "";
 
 //const int rs = 13, en = 12, d4 = 8, d5 = 9, d6 = 10, d7 = 11;
 //LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
+// read a reply from the lora board (RN2383) over the serial interface
 String read_serial()
 {
     while(lora.available() == 0)
@@ -36,11 +35,13 @@ String read_serial()
     return lora.readStringUntil('\n');
 }
 
+// write a command to the lora board (RN2383) over serial using the correct termination characters (CR+LF)
 void write_serial(String msg)
 {
     lora.print(msg + "\r\n");
 }
 
+// sets up the lora board (RN2383)
 void setup_lora()
 {
     write_serial("sys get ver");
@@ -50,7 +51,7 @@ void setup_lora()
     read_serial();
 }
 
-
+// sends a single message using lora and the RNDL protocol
 void send_lora(String msg)
 {
     int msglen = msg.length();
@@ -62,7 +63,6 @@ void send_lora(String msg)
     {
         splitmsg[i] = msg.substring(i*MAX_HEX_CHARS, i*MAX_HEX_CHARS + MAX_HEX_CHARS);
     }
-
 
     for(int i = 0; i < it; i++)
     {
@@ -82,20 +82,16 @@ void send_lora(String msg)
     }
 }
 
+
+// read a single message using lora and the RNDL protocol
 String single_read_lora()
 {
-
     bool end_of_message = false;
-
     String whole_message = "";
 
-    int gas = 0;
-
+    // reads until the end off message byte (0x00) is detected
     while(!end_of_message)
-    {
-        PRINT(gas);
-        gas++;
-        
+    {   
         write_serial("radio rx 0");
         read_serial(); //ok
         String msg = read_serial();
@@ -120,8 +116,6 @@ String single_read_lora()
             continue;
         }
 
-        PRINT("ISDN");
-        PRINT(tmp);
         tmp.trim();
         if(tmp.endsWith("00"))
         {
@@ -135,6 +129,7 @@ String single_read_lora()
 
         PRINT("==============");
 
+        // C magic to convert a hexadecimal string to an ascii string
         for(String s : splitmsg)
         {
                 PRINT(s);
@@ -143,11 +138,7 @@ String single_read_lora()
                 number >>= 8;
                 char c2 = number & 0xFF;
                 number >>= 8;
-                //char c3 = number & 0xFF;
-                //number >>= 8;
-
-                //decoded[deccount] = c3;
-                //deccount++;
+                
                 decoded[deccount] = c2;
                 deccount++;
                 decoded[deccount] = c1;
@@ -164,6 +155,11 @@ String single_read_lora()
 
 }
 
+// starts the slave mode of the RNDL protocol:
+//      - listen to requests
+//      - check if the requested address matches the device address
+//      - read the message string and send the corresponding data
+//      - repeat
 void start_rndl_slave(String address)
 {
     while(true)
@@ -172,52 +168,51 @@ void start_rndl_slave(String address)
         PRINT("Received request: " + msg);
         if(msg.startsWith("Q;"))
         {
+            // Request String: "Q:<address>;<message>"
+            // extracts the address and message from the request string
             String t1 = msg.substring(2);
             int index1 = t1.indexOf(';');
             String t_addr = t1.substring(0, index1);
             
-            int index2 = t1.indexOf(';', index1+1);
+            int index2 = t1.indexOf(';', index1);
             Serial.println("Index2: " + index2);
-            String req_msg = t1.substring(index2);
+            String req_msg = t1.substring(index2+1);
 
             Serial.println("MESSAGE:");
-
+            PRINT(req_msg);
+            
+            // Compare addresses and send requested data
             if(address.equalsIgnoreCase(t_addr))
             {
-                //TODO: check message
-                int in = digitalRead(12);
-                send_lora("A;D0: " + in);
+
+                if(req_msg == "time")
+                {
+                    send_lora("A;time: " + String(millis()));
+                }
+                else
+                {
+                    send_lora("A;UNKNOWN_MESSAGE");
+                }
             }
-
         }
-
-        
     }
 }
 
 void setup()
 {
-    //pinMode(7, OUTPUT);
-    //digitalWrite(7, HIGH);
     //keyboard.begin(2, 3, PS2Keymap_US);
 
-    pinMode(14, INPUT);
-
-
-    Serial.begin(57600);
+    // serial communication with PC for debugging
+    Serial.begin(115200);
     Serial.println("Arduino LoRa");
 
+    // serial communication with the lora board (RN2383)
     lora.begin(57600);
 
+
+    // setup lora and start slave mode with given address
     setup_lora();
-
     start_rndl_slave("1");
-
-    //send_lora("digits hex numbers with any prefix");
-
 }
 
-void loop() {
-
-    
-}
+void loop() { }

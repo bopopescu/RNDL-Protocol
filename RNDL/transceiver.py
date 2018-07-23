@@ -48,7 +48,7 @@ class Transceiver:
         self.transmit("Q;" + str(addr) + ";" + str(msg))
 
         reply = self.receive()
-        print(reply)
+        #print(reply)
         reply = reply.split(";")
         return reply[1]
         #TODO: implement timeout
@@ -93,6 +93,7 @@ class Transceiver:
                 
                 value = encoder.decodehex(value[1])
                 print("Received packet (" + str(len(value)) + ")")
+                print(value)
                 
             else:
                 value = None
