@@ -8,6 +8,6 @@ import encoder
 def callback(msg):
     return input("reply: ")
 
-trans = Transceiver("COM8")
+trans = Transceiver("COM9")
 
 trans.start_slave("2", callback)

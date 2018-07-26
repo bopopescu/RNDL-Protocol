@@ -14,7 +14,7 @@
 #endif
 
 // connection used to communicate with the lora board (RN2383)
-SoftwareSerial lora(5, 4); // RX, TX    
+SoftwareSerial lora(5, 4); // RX, TX
 SoftwareSerial uno(13, 15); // RX, TX
 
 
@@ -199,6 +199,7 @@ void start_rndl_slave(String address)
                 {
                     send_lora("A;time: " + String(millis()));
                 }
+                /*
                 else if(req_msg == "keyboard")
                 {
                     digitalWrite(LED_BUILTIN, LOW);
@@ -217,6 +218,11 @@ void start_rndl_slave(String address)
                     }
                     digitalWrite(LED_BUILTIN, HIGH);
                     send_lora("A;" + keyboardinput.substring(1));
+                }
+                */
+                else if(req_msg = "temperature")
+                {
+                    send_lora("A;temperature: NO_SENSOR");
                 }
                 else
                 {
@@ -252,7 +258,7 @@ void setup()
     
     // setup lora and start slave mode with given address
     setup_lora();
-    start_rndl_slave("1");
+    start_rndl_slave("5");
 }
 
 void loop() { }
