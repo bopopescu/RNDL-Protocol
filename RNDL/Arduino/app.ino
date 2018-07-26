@@ -175,6 +175,13 @@ void start_rndl_slave(String address)
 {
     while(true)
     {
+        // Restart the MCU when it has been online for a long time
+        // 20*60*1000 = 
+        if(millis() > 1200000)
+        {
+            ESP.restart();
+        }
+
         String msg = single_read_lora();
         PRINT("Received request: " + msg);
         if(msg.startsWith("Q;"))
@@ -205,7 +212,7 @@ void start_rndl_slave(String address)
                 {
                     send_lora("A;time: " + String(millis()));
                 }
-                /*
+#ifdef KEYBOARD
                 else if(req_msg == "keyboard")
                 {
                     digitalWrite(LED_BUILTIN, LOW);
@@ -225,7 +232,7 @@ void start_rndl_slave(String address)
                     digitalWrite(LED_BUILTIN, HIGH);
                     send_lora("A;" + keyboardinput.substring(1));
                 }
-                */
+#endif
                 else if(req_msg == "temperature")
                 {
 #ifdef DHT_CONNECTED
