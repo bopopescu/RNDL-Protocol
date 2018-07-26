@@ -1,3 +1,6 @@
+#include <DHT_U.h>
+#include <DHT.h>
+
 // Arduino sketch which implements the RNDL protocol and simple lora messaging
 // created by Felix Holz, 2018-07-18
 #include <LiquidCrystal.h>
@@ -5,7 +8,7 @@
 #include <SoftwareSerial.h>
 
 //#define DEBUG
-
+#define DHT_CONNECTED
 // print data to serial port for debugging
 #ifdef DEBUG
     #define PRINT(x) Serial.println(x)
@@ -13,6 +16,9 @@
     #define PRINT(x) 
 #endif
 
+#ifdef DHT_CONNECTED
+    DHT dht(14, DHT22);
+#endif
 // connection used to communicate with the lora board (RN2383)
 SoftwareSerial lora(5, 4); // RX, TX
 SoftwareSerial uno(13, 15); // RX, TX
@@ -220,9 +226,37 @@ void start_rndl_slave(String address)
                     send_lora("A;" + keyboardinput.substring(1));
                 }
                 */
-                else if(req_msg = "temperature")
+                else if(req_msg == "temperature")
                 {
-                    send_lora("A;temperature: NO_SENSOR");
+#ifdef DHT_CONNECTED
+                    float temperature = dht.readTemperature();
+                    if(isnan(temperature))
+                    {
+                        send_lora("A;MEASUREMENT_ERROR");
+                    }
+                    else
+                    {
+                        send_lora("A;" + String(temperature));
+                    }
+#else
+                    send_lora("A;NO_SENSOR");
+#endif          
+                }
+                else if(req_msg == "humidity")
+                {
+#ifdef DHT_CONNECTED
+                    float humidity = dht.readHumidity();
+                    if(isnan(humidity))
+                    {
+                        send_lora("A;MEASUREMENT_ERROR");
+                    }
+                    else
+                    {
+                        send_lora("A;" + String(humidity));
+                    }
+#else
+                    send_lora("A;NO_SENSOR");
+#endif
                 }
                 else
                 {
@@ -249,6 +283,10 @@ void setup()
     // serial communication with the lora board (RN2383)
     lora.begin(57600);
     uno.begin(9600);
+
+#ifdef DHT_CONNECTED
+    dht.begin();
+#endif
 
     while(uno.available())
     {
