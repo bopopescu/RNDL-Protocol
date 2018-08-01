@@ -7,8 +7,15 @@
 #include <PS2Keyboard.h>
 #include <SoftwareSerial.h>
 
+
+// Macros
+
 //#define DEBUG
+//#define KEYBOARD
+//#define UNO_SOFTWARE_SERIAL
 #define DHT_CONNECTED
+
+
 // print data to serial port for debugging
 #ifdef DEBUG
     #define PRINT(x) Serial.println(x)
@@ -21,13 +28,17 @@
 #endif
 // connection used to communicate with the lora board (RN2383)
 SoftwareSerial lora(5, 4); // RX, TX
-SoftwareSerial uno(13, 15); // RX, TX
+
+#ifdef UNO_SOFTWARE_SERIAL
+    SoftwareSerial uno(13, 15); // RX, TX
+#endif
 
 
 
 // maximum characters transmitted in a single packet
 const int MAX_HEX_CHARS = 10;
 
+const int DEVICE_ADDRESS = 5;
 //PS2Keyboard keyboard;
 //String keyboardbuffer = "";
 
@@ -201,13 +212,14 @@ void start_rndl_slave(String address)
             // Compare addresses and send requested data
             if(address.equalsIgnoreCase(t_addr))
             {
+#ifdef UNO_SOFTWARE_SERIAL
                 // read until buffer is empty
                 while(uno.available())
                 {
                     uno.read();
                     ESP.wdtFeed();
                 }
-
+#endif
                 if(req_msg == "time")
                 {
                     send_lora("A;time: " + String(millis()));
@@ -289,21 +301,24 @@ void setup()
 
     // serial communication with the lora board (RN2383)
     lora.begin(57600);
+#ifdef UNO_SOFTWARE_SERIAL
     uno.begin(9600);
+#endif
 
 #ifdef DHT_CONNECTED
     dht.begin();
 #endif
 
+#ifdef UNO_SOFTWARE_SERIAL
     while(uno.available())
     {
         uno.read();
         ESP.wdtFeed();
     }
-    
+#endif
     // setup lora and start slave mode with given address
     setup_lora();
-    start_rndl_slave("5");
+    start_rndl_slave(DEVICE_ADDRESS);
 }
 
 void loop() { }

@@ -1,1 +1,0 @@
-RNDL Protocol v1.0
