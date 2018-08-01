@@ -15,7 +15,7 @@ sensors = {
 
 measurements = [{"address": 5, "humidity": -42, "temperature": -88, "time": 420}, {"address": 1, "humidity": -44, "temperature": -2311, "time": 534}]
 
-#trans = Transceiver("COM9") 
+trans = Transceiver("COM9") 
 
 def get_address(server, bridge, room):
     return sensors[str(server) + ", " + str(bridge) + ", " + str(room)]

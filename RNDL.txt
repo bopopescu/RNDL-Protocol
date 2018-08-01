@@ -1,5 +1,0 @@
-Request:
-    Q;<addr>;<message>
-
-Response:
-    A;<data>
