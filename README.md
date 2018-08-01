@@ -74,3 +74,6 @@ To encode the message "Hello World!" with a packet size of 4 the following steps
 - "Hell", "o Wo", "rld!" -> "48656C6C", "6F20576F", "726C6421"
 - "48656C6C", "6F20576F", "726C6421" -> "48656C6C", "6F20576F", "726C642100"
 - transmit every packet over LoRa
+
+## Webserver
+The webserver is currently not reliable and should not be used for real-world applications.
