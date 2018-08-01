@@ -1,5 +1,6 @@
 # RNDL-Protocol
 Simple request-based protocol used for transferring IoT data over LoRa.
+All important files are located in the RNDL directory.
 
 ## Command structure
 All transmitted messages use the ASCII character set. Every message can be recieved by every device, but only the device with the corresponding address.
