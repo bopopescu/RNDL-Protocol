@@ -5,7 +5,6 @@ import encoder
 import sys
 import serial
 import serialutil as ser
-from threading import *
 import time
 
 # the Transceiver is a wrapper class for the RNDL protocol as well as for normal lora messages

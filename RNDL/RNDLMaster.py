@@ -5,7 +5,7 @@ from transceiver import Transceiver
 import serialutil as ser
 import encoder
 
-trans = Transceiver("COM10")
+trans = Transceiver("COM9")
 
 while True:
     msg = input("message: ")

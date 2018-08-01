@@ -14,7 +14,7 @@ class RNDLMasterGUI(Window):
 
         self.chatlog = ""
         self.tf_chatlog.setText(self.chatlog)
-        self.trans = Transceiver("COM10")
+        self.trans = Transceiver("COM9")
 
     @pyqtSlot()
     def onClick(self):
