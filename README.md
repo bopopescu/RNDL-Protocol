@@ -31,6 +31,18 @@ print(trans.request_data("1", "temperature"))
 ### Slave
 The Slave Device is implemented in RNDLSlave.py, which asks for a reply in the console when receiving a message. 
 
+#### Arduino implementation
+The RNDL Protocol is also implemented in C++ for use with an Arduino. An example implementation can be found in Arduino/app.ino.
+##### #define preprocessor directives
+To make the Arduino code more versatile, macros were used.
+
+#define | effect
+--- | ---
+DEBUG | Enable debug statements on the default serial interface
+KEYBOARD | Enable keyboard input with an Arduino Uno as Serial Passthrough
+UNO_SOFTWARE_SERIAL | Enables second Software Serial. Required for the keyboard.
+DHT_CONNECTED | Enables a DHT Sensor
+
 #### Simple Slave Device
 
 ```python
@@ -61,6 +73,3 @@ To encode the message "Hello World!" with a packet size of 4 the following steps
 - "Hell", "o Wo", "rld!" -> "48656C6C", "6F20576F", "726C6421"
 - "48656C6C", "6F20576F", "726C6421" -> "48656C6C", "6F20576F", "726C642100"
 - transmit every packet over LoRa
-
-
-### Arduino
