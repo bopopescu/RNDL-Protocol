@@ -38,10 +38,10 @@ class Transceiver:
         ser.write("mac pause", self.s)
         ser.read(self.s)
 
-    # start slave mode with the given address and callback
+    # start subordinate mode with the given address and callback
     #   - when a message is received, it is passed on to the callback function which returns the answer
-    #   - the answer is then transmittetd back to the master
-    def start_slave(self, addr, callback):
+    #   - the answer is then transmittetd back to the main
+    def start_subordinate(self, addr, callback):
         while True:
             data = self.receive()
             print("received request: " + data)
@@ -54,9 +54,9 @@ class Transceiver:
                 if data[1] == addr:
                     self.transmit("A;" + callback(data[2]))
         
-    # request data from a slave device
-    #   addr: address of the slave
-    #   msg: message transmitted to the slave
+    # request data from a subordinate device
+    #   addr: address of the subordinate
+    #   msg: message transmitted to the subordinate
     def request_data(self, addr, msg):
         self.transmit("Q;" + str(addr) + ";" + str(msg))
 

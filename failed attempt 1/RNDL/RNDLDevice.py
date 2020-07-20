@@ -37,8 +37,8 @@ class RNDLDevice():
         reply = tr.receive(self.s)
         return reply
 
-    #starts slave mode. addr is the address of the device. request_callback should return an answer based on the request parameter
-    def start_slave(self, addr, request_callback):
+    #starts subordinate mode. addr is the address of the device. request_callback should return an answer based on the request parameter
+    def start_subordinate(self, addr, request_callback):
         while True:
             req = tr.receive(self.s)
             print(req)

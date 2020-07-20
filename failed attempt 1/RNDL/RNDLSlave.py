@@ -5,5 +5,5 @@ device = RNDLDevice("COM7")
 def cb(msg):
     return "reply"
 
-device.start_slave("12", cb)
+device.start_subordinate("12", cb)
 
